@@ -1,9 +1,13 @@
+import { Box } from "@mui/material"
+import { Exercises, HeroBanner, SearchExercises } from "../../components"
 
 const Home = () => {
     return (
-        <div>
-
-        </div>
+        <Box>
+            <HeroBanner />
+            <SearchExercises />
+            <Exercises />
+        </Box>
     )
 }
 
