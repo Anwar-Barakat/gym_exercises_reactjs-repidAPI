@@ -1,6 +1,40 @@
 import { Box, Button, Stack, TextField, Typography } from "@mui/material"
+import { useEffect, useState } from "react"
+import { exerciseOptions, fetchData } from "../../utils/fetchData"
 
 const SearchExercises = () => {
+  const [search, setSearch] = useState('')
+  const [exercises, setExercises] = useState([])
+  const [bodyParts, setBodyParts] = useState([])
+
+  useEffect(() => {
+    const fetchExercisesData = async () => {
+      const bodyParts = await fetchData('https://exercisedb.p.rapidapi.com/exercises/bodyPartList', exerciseOptions)
+
+      setBodyParts(['all', ...bodyParts])
+    }
+
+
+    fetchExercisesData()
+  }, [exercises])
+
+  const handleSearch = async () => {
+    if (search) {
+      const exercisesData = await fetchData('https://exercisedb.p.rapidapi.com/exercises', exerciseOptions);
+
+      const filteredExercises = exercisesData.filter((exercise) => {
+        return exercise.name.toLowerCase().includes(search) ||
+          exercise.target.toLowerCase().includes(search) ||
+          exercise.equipment.toLowerCase().includes(search) ||
+          exercise.bodyPart.toLowerCase().includes(search)
+      });
+
+      setSearch('')
+      setExercises(filteredExercises)
+
+    }
+  }
+
   return (
     <Stack
       alignItems={'center'}
@@ -20,8 +54,8 @@ const SearchExercises = () => {
         <TextField
           placeholder={'Search Exercises'}
           height={78}
-          value={''}
-          onChange={() => { }}
+          value={search}
+          onChange={(e) => setSearch(e.target.value.toLowerCase())}
           type="text"
           sx={{
             input: {
@@ -40,7 +74,9 @@ const SearchExercises = () => {
             },
           }}
         />
-        <Button className="search-btn"
+        <Button
+          onClick={handleSearch}
+          className="search-btn"
           sx={{
             position: 'absolute',
             right: 0,
