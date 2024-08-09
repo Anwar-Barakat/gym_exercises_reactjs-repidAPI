@@ -8,7 +8,10 @@ const BodyPart = ({ item, setBodyPart, bodyPart }) => {
             alignItems="center"
             justifyContent="center"
             className="bodyPart-card"
-            onClick={() => setBodyPart(item)}
+            onClick={() => {
+                setBodyPart(item)
+                window.scrollTo({ top: 1800, left: 100,behavior: 'smooth' })
+            }}
             role="button"
             aria-label={`Select ${item}`}
             sx={{
@@ -19,10 +22,10 @@ const BodyPart = ({ item, setBodyPart, bodyPart }) => {
                 height: '280px',
                 cursor: 'pointer',
                 gap: '3rem',
-            }} 
+            }}
         >
             <img src={icon} alt={`${item} icon`} style={{ width: '40px', height: '40px' }} />
-            <Typography variant="h6" sx={{ color: '#000' }} fontWeight={'bold'}>{item}</Typography>
+            <Typography variant="h6" sx={{ color: '#3a1212' }} fontWeight={'bold'} textTransform={'capitalize'}>{item}</Typography>
         </Stack>
     );
 };
