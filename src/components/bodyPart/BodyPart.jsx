@@ -22,7 +22,7 @@ const BodyPart = ({ item, setBodyPart, bodyPart }) => {
             }} 
         >
             <img src={icon} alt={`${item} icon`} style={{ width: '40px', height: '40px' }} />
-            <Typography variant="h6" sx={{ color: '#000' }} fontWeight={bold}>{item}</Typography>
+            <Typography variant="h6" sx={{ color: '#000' }} fontWeight={'bold'}>{item}</Typography>
         </Stack>
     );
 };
