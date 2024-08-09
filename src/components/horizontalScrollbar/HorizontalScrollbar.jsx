@@ -26,29 +26,22 @@ const LeftArrow = () => {
       </Typography>
     );
   };
+  
 
 const HorizontalScrollbar = ({ data, bodyPart, setBodyPart }) => {
     return (
         <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
-            {data.map((item) => (
-                <Box
-                    key={item.id || item}
-                    title={item.id || item}
-                    itemID={item.id || item}
-                    sx={{
-                        padding: '10px',
-                        cursor: 'pointer',
-                        color: 'white',
-                        borderRadius: '5px',
-                        marginRight: '10px',
-                        textAlign: 'center',
-                    }}
-                    onClick={() => setBodyPart(item)}
-                >
-                    <BodyPart item={item} bodyPart={bodyPart} setBodyPart={setBodyPart} />
-                </Box>
-            ))}
-        </ScrollMenu>
+        {data.map((item) => (
+          <Box
+            key={item.id || item}
+            itemId={item.id || item}
+            title={item.id || item}
+            m="0 40px"
+          >
+            <BodyPart item={item} setBodyPart={setBodyPart} bodyPart={bodyPart} /> 
+          </Box>
+        ))}
+      </ScrollMenu>
     );
 };
 
