@@ -22,7 +22,7 @@ const Exercises = ({ exercises, bodyPart, setExercises }) => {
         };
 
         fetchExercisesData();
-    }, [bodyPart]);
+    }, [bodyPart, setExercises]);
 
     // Calculate the exercises to display for the current page
     const indexOfLastExercise = currentPage * exercisesPerPage;
@@ -34,7 +34,8 @@ const Exercises = ({ exercises, bodyPart, setExercises }) => {
     };
 
     return (
-        <Box id="exercises" sx={{ mt: { lg: '110px' } }} mt={50} p={20}>
+        <Box id="exercises" sx={{ mt: { lg: '110px' } }} mt={'50px'} px={20}>
+            <Typography variant="h4" fontWeight="bold" sx={{ fontSize: { lg: '44px', xs: '30px' } }} mb="46px">Showing Results</Typography>
             <Stack direction="row" sx={{ gap: { lg: '107px', xs: '50px' } }} flexWrap="wrap" justifyContent="center">
                 {
                     currentExercises.map((exercise) => (
@@ -42,7 +43,7 @@ const Exercises = ({ exercises, bodyPart, setExercises }) => {
                     ))
                 }
             </Stack>
-            <Stack mt={100} alignItems={'center'}>
+            <Stack mt={'100px'} alignItems={'center'}>
                 {/* For pagination  */}
                 {
                     exercises.length > exercisesPerPage && (
