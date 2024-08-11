@@ -1,62 +1,76 @@
 import PropTypes from 'prop-types';
-import BodyPart from "../bodyPart/BodyPart";
-import { ScrollMenu, VisibilityContext } from 'react-horizontal-scrolling-menu';
-import { Box, Typography } from '@mui/material';
-import { useContext } from 'react';
+import { Box, Pagination, Stack, Typography } from "@mui/material";
+import { useEffect, useState } from "react";
+import { exerciseOptions, fetchData } from "../../utils/fetchData";
+import ExerciseCard from "../ExerciseCard/ExerciseCard";
 
-import RightArrowIcon from '../../assets/icons/right-arrow.png';
-import LeftArrowIcon from '../../assets/icons/left-arrow.png';
+const Exercises = ({ exercises = [], bodyPart, setExercises }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [exercisesPerPage] = useState(6);
 
-const LeftArrow = () => {
-    const { scrollPrev } = useContext(VisibilityContext);
-  
-    return (
-      <Typography onClick={() => scrollPrev()} className="right-arrow">
-        <img src={LeftArrowIcon} alt="right-arrow" />
-      </Typography>
-    );
-  };
-  
-  const RightArrow = () => {
-    const { scrollNext } = useContext(VisibilityContext);
-  
-    return (
-      <Typography onClick={() => scrollNext()} className="left-arrow">
-        <img src={RightArrowIcon} alt="right-arrow" />
-      </Typography>
-    );
-  };
-  
+    useEffect(() => {
+        const fetchExercisesData = async () => {
+            let exercisesData = [];
 
-const HorizontalScrollbar = ({ data, bodyPart, setBodyPart }) => {
+            if (bodyPart === 'all') {
+                exercisesData = await fetchData('https://exercisedb.p.rapidapi.com/exercises', exerciseOptions);
+            } else {
+                exercisesData = await fetchData(`https://exercisedb.p.rapidapi.com/exercises/bodyPart/${bodyPart}`, exerciseOptions);
+            }
+
+            setExercises(exercisesData);
+        };
+
+        fetchExercisesData();
+    }, [bodyPart, setExercises]);
+
+    // Ensure exercises is an array
+    const currentExercises = Array.isArray(exercises) ? exercises.slice((currentPage - 1) * exercisesPerPage, currentPage * exercisesPerPage) : [];
+
+    const paginate = (event, value) => {
+        setCurrentPage(value);
+    };
+
     return (
-        <ScrollMenu LeftArrow={LeftArrow} RightArrow={RightArrow}>
-        {data.map((item) => (
-          <Box
-            key={item.id || item}
-            itemId={item.id || item}
-            title={item.id || item}
-            m="0 40px"
-          >
-            <BodyPart item={item} setBodyPart={setBodyPart} bodyPart={bodyPart} /> 
-          </Box>
-        ))}
-      </ScrollMenu>
+        <Box id="exercises" sx={{ mt: { lg: '110px' } }} mt={'50px'} px={20}>
+            <Typography variant="h4" fontWeight="bold" sx={{ fontSize: { lg: '44px', xs: '30px' } }} mb="46px">
+                Showing Results
+            </Typography>
+            <Stack direction="row" sx={{ gap: { lg: '107px', xs: '50px' } }} flexWrap="wrap" justifyContent="center">
+                {
+                    currentExercises.length > 0 ? (
+                        currentExercises.map((exercise) => (
+                            <ExerciseCard key={exercise.id} exercise={exercise} />
+                        ))
+                    ) : (
+                        <Typography>No exercises found</Typography>
+                    )
+                }
+            </Stack>
+            <Stack mt={'100px'} alignItems={'center'}>
+                {/* For pagination */}
+                {
+                    Array.isArray(exercises) && exercises.length > exercisesPerPage && (
+                        <Pagination
+                            color="standard"
+                            shape="rounded"
+                            defaultPage={1}
+                            count={Math.ceil(exercises.length / exercisesPerPage)}
+                            page={currentPage}
+                            onChange={paginate}
+                            size="large"
+                        />
+                    )
+                }
+            </Stack>
+        </Box>
     );
 };
 
-HorizontalScrollbar.propTypes = {
-    data: PropTypes.arrayOf(
-        PropTypes.oneOfType([
-            PropTypes.shape({
-                id: PropTypes.oneOfType([PropTypes.string, PropTypes.number])
-            }),
-            PropTypes.string,
-            PropTypes.number
-        ])
-    ).isRequired,
-    bodyPart: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    setBodyPart: PropTypes.func.isRequired
+Exercises.propTypes = {
+    exercises: PropTypes.arrayOf(PropTypes.object),
+    bodyPart: PropTypes.string.isRequired,
+    setExercises: PropTypes.func.isRequired,
 };
 
-export default HorizontalScrollbar;
+export default Exercises;

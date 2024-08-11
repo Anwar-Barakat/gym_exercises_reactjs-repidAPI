@@ -23,7 +23,7 @@ const ExerciseVideos = ({ exerciseVideos, name }) => {
       </Typography>
       
       <Grid container spacing={3}>
-        {exerciseVideos.slice(0, 3).map((item, index) => (
+        {exerciseVideos.slice(0, 6).map((item, index) => (
           <Grid 
             item 
             xs={12} 
